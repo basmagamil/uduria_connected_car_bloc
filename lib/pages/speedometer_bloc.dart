@@ -23,24 +23,21 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
   var timer;
   var stopwatch1 = new Stopwatch();
   var stopwatch2 = new Stopwatch();
-  var _speed = 0;
+  var _speed = 0.0;
 
-  int incrementSpeed(int value) {
-    // return value;
-    return (40 - value).abs();
-  }
-
-  void updateSpeed(Stream<int> stream) async {
-    await for (var value in stream) {
-      // setState(() {
-      _speed = value;
-      add(CarEventChanged(
-          position: new Position(speed: _speed.toDouble()),
-          duration1: state.duration1,
-          duration2: state.duration2));
-      // });
-    }
-  }
+  // int incrementSpeed(int value) {
+  //   // return value;
+  //   return (40 - value).abs();
+  // }
+  // void updateSpeed(Stream<int> stream) async {
+  //   await for (var value in stream) {
+  //     _speed = value;
+  //     add(CarEventChanged(
+  //         position: new Position(speed: _speed.toDouble()),
+  //         duration1: state.duration1,
+  //         duration2: state.duration2));
+  //   }
+  // }
 
   void startTimer() {
     timer = new Timer.periodic(new Duration(milliseconds: 1000), (Timer timer) {
@@ -60,13 +57,10 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
   }
 
   SpeedometerBloc({@required this.geolocator}) {
-    Stream<int> stream =
-        Stream<int>.periodic(new Duration(milliseconds: 1000), incrementSpeed);
-    updateSpeed(stream);
+    // Stream<int> stream =
+    //     Stream<int>.periodic(new Duration(milliseconds: 1000), incrementSpeed);
+    // updateSpeed(stream);
   }
-  // SpeedometerBloc({@required Geolocator geolocator})
-  //     : assert(geolocator != null),
-  //       geolocator = geolocator;
 
   @override
   CarState get initialState =>
@@ -82,8 +76,8 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
           .listen((Position position) {
         // print('listen');
         startTimer();
-        // _speed = position.speed;
-        // add(CarEventChanged(position: position));
+        _speed = position.speed;
+        add(CarEventChanged(position: position));
         if (_speed >= 10 && _speed <= 11 && !stopwatch1.isRunning) {
           stopwatch1.reset();
           stopwatch1.start();
@@ -105,18 +99,6 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
       yield state;
     }
   }
-
-  // _updateTime(Timer timer) {
-  //   if (stopwatch1.isRunning) {
-  //     add(CarEventChanged(position: position, ))
-  //       _duration1 = (stopwatch1.elapsedMilliseconds * 0.001).round();
-  //   }
-  //   if (stopwatch2.isRunning) {
-  //     setState(() {
-  //       _duration2 = (stopwatch2.elapsedMilliseconds * 0.001).round();
-  //     });
-  //   }
-  // }
 
   @override
   Future<void> close() {
