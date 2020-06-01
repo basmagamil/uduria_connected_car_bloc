@@ -49,7 +49,7 @@ class MyHomePage extends StatelessWidget {
                             if (state != null)
                               return '${(state.position.speed * 3.6).round()}'; // * 3.6 OR * 100 /////////////////
                             else {
-                              return 'Fetching..';
+                              return '..';
                             }
                           }()),
                           style: Theme.of(context).textTheme.display1,
