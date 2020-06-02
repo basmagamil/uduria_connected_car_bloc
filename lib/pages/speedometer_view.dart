@@ -5,15 +5,6 @@ import 'package:geolocator/geolocator.dart';
 import 'package:uduria_connected_car/models/car_state.dart';
 import 'package:uduria_connected_car/pages/speedometer_bloc.dart';
 
-// class MyHomePage extends StatefulWidget {
-//   MyHomePage({Key key, this.title}) : super(key: key);
-
-//   final String title;
-
-//   @override
-//   _MyHomePageState createState() => _MyHomePageState();
-// }
-
 class MyHomePage extends StatelessWidget {
   // double _speed = 0; //int
   var geolocator = Geolocator();
@@ -47,7 +38,8 @@ class MyHomePage extends StatelessWidget {
                         Text(
                           (() {
                             if (state != null)
-                              return '${(state.position.speed * 3.6).round()}'; // * 3.6 OR * 100 /////////////////
+                              //when testing remove 3.6 -- *3.6
+                              return '${(state.position.speed * 3.6).round()}';
                             else {
                               return '..';
                             }

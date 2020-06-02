@@ -23,12 +23,15 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
   var timer;
   var stopwatch1 = new Stopwatch();
   var stopwatch2 = new Stopwatch();
-  var _speed = 0.0;
+  var _speed = 0.0; //0 when testing -- 0.0
 
+  ////For testing using stream
   // int incrementSpeed(int value) {
   //   // return value;
   //   return (40 - value).abs();
   // }
+
+  ////For testing using stream
   // void updateSpeed(Stream<int> stream) async {
   //   await for (var value in stream) {
   //     _speed = value;
@@ -57,10 +60,13 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
   }
 
   SpeedometerBloc({@required this.geolocator}) {
+    ////For testing using stream
     // Stream<int> stream =
     //     Stream<int>.periodic(new Duration(milliseconds: 1000), incrementSpeed);
     // updateSpeed(stream);
   }
+
+  var tolerance = 0;
 
   @override
   CarState get initialState =>
@@ -74,16 +80,18 @@ class SpeedometerBloc extends Bloc<CarEvent, CarState> {
       positionStream = geolocator
           .getPositionStream(locationOptions)
           .listen((Position position) {
-        // print('listen');
         startTimer();
+        //comment when testing using stream
         _speed = position.speed;
         add(CarEventChanged(position: position));
-        if (_speed >= 10 && _speed <= 11 && !stopwatch1.isRunning) {
+        if (_speed >= 10 && _speed <= 10 + tolerance && !stopwatch1.isRunning) {
           stopwatch1.reset();
           stopwatch1.start();
         } else if ((_speed >= 30 || _speed <= 10) && stopwatch1.isRunning) {
           stopwatch1.stop();
-        } else if (_speed <= 30 && _speed >= 29 && !stopwatch2.isRunning) {
+        } else if (_speed <= 30 &&
+            _speed >= 30 - tolerance &&
+            !stopwatch2.isRunning) {
           stopwatch2.reset();
           stopwatch2.start();
         } else if ((_speed <= 10 || _speed >= 30) && stopwatch2.isRunning) {
